@@ -6,9 +6,9 @@ var server = require('http').createServer(app);
 
 
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(methodOverride());
+//app.use(bodyParser.urlencoded({ extended: false }));
+//app.use(bodyParser.json());
+//app.use(methodOverride());
 
 
 app.get('/json', function (req, res) {
