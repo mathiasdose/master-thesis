@@ -34,9 +34,8 @@ if (cluster.isMaster) {
   var routes = program.routes === undefined ? 1: program.routes;
   var methods = ['get', 'post', 'put', 'delete'];
   var div = routes/methods.length;
-  console.log(methods[Math.floor(100000 / div)]);
   for(var i = 0; i < routes; i++) {
-    if (i === routes/2) {
+    if (i === Math.floor(routes/2)) {
       app.get('/json/hello/:id/world', function (req, res) {
         res.send();
       });
