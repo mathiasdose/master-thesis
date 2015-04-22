@@ -6,6 +6,7 @@ var methodOverride = require('method-override');
 var http = require('http');
 var program = require('commander');
 var uuid = require('node-uuid');
+var _ = require('lodash');
 
 
 program
@@ -33,18 +34,19 @@ if (cluster.isMaster) {
 
   var routes = program.routes === undefined ? 1: program.routes;
   var methods = ['get', 'post', 'put', 'delete'];
-  var div = routes/methods.length;
-  for(var i = 0; i < routes; i++) {
-    if (i === Math.floor(routes/2)) {
-      app.get('/json/hello/:id/world', function (req, res) {
-        res.send();
-      });
+
+  for(var i = 0; i < Math.ceil(routes/methods.length); i++) {
+    var url = '';
+    if (i === Math.floor(routes/(methods.length*2))) {
+      url = '/request-routing/hello/:id/world';
     } else {
-      var method = methods[Math.floor(i / div)];
-      app[method]('/json/' + uuid.v4() + '/:id/' + uuid.v4(), function (req, res) {
+      url = '/request-routing/' + uuid.v4() + '/:id/' + uuid.v4();
+    }
+    _.forEach(methods, function(method) {
+      app[method](url, function (req, res) {
         res.send();
       });
-    }
+    });
   }
 
   server.listen(9000, function () {
