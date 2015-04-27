@@ -9,6 +9,7 @@
   "author": "Mathias Dosé <mathias.dose@outlook.com>",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^2.9.24",
     "body-parser": "^1.12.0",
     "commander": "^2.7.1",
     "express": "^4.12.2",
