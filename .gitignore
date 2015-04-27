@@ -73,3 +73,7 @@ ClientBin/
 *.publishsettings
 node_modules/
 bower_components/
+
+# Data files
+express/data/
+
