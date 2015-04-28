@@ -7,6 +7,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
 using System.Web.Http;
+using asp.net_mvc.App_Start;
 
 namespace asp.net_mvc
 {
@@ -17,7 +18,9 @@ namespace asp.net_mvc
             // Code that runs on application startup
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);            
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            
+            StartUp.Init();
         }
     }
 }
