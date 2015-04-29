@@ -11,16 +11,19 @@ namespace asp.net_mvc.App_Start
     public class StartUp
     {
         public static Array Indexes { get; set; }
-        public static MemoryStream Memory { get; set; }
+        public static Decimal NumberOfRoutes { get; set; }
         public static Dictionary<int, string> JSONData { get; set; } 
 
         public static void Init()
         {
-            //var Indexes = new List<int>();
+            NumberOfRoutes = bool.Parse(ConfigurationManager.AppSettings["RequestTest"]) ? 
+                decimal.Parse(ConfigurationManager.AppSettings["NumberOfRoutes"]) : 1;
+
             if (bool.Parse(ConfigurationManager.AppSettings["O*MTest"]))
                 SetupDbTest();
 
-            SetupJSONTest();
+            if (bool.Parse(ConfigurationManager.AppSettings["SerialTest"]))
+                SetupJSONTest();
 
         }
 
@@ -29,17 +32,20 @@ namespace asp.net_mvc.App_Start
             
             var paths = Directory.GetFiles(HostingEnvironment.ApplicationPhysicalPath + @".\data\", "*.json" );
 
+            JSONData = new Dictionary<int, string>();
             foreach (var path in paths)
             {
                 using (var fs = new StreamReader(path))
                 {
-                    JSONData.Add(int.Parse(Path.GetFileNameWithoutExtension(path)), fs.ReadToEnd());
+                    string text = fs.ReadToEnd();
+                    JSONData.Add(int.Parse(Path.GetFileNameWithoutExtension(path)), text);
                 }
             }
         }
 
         private static void SetupDbTest()
         {
+            
             using (var db = new MyDbContainer())
             {
                 db.Database.CreateIfNotExists();

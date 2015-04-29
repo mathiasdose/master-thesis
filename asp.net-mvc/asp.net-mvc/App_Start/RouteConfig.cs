@@ -12,10 +12,31 @@ namespace asp.net_mvc
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            for (var i = 0; i < int.Parse(ConfigurationManager.AppSettings["NumberOfRoutes"]); i++)
+            string[] allowedMethods = { "GET", "POST", "PUT", "DELETE" };
+            var methodConstraints = new HttpMethodConstraint(allowedMethods);
+
+            for (var i = 0; i < Math.Ceiling(StartUp.NumberOfRoutes/allowedMethods.Length); i++)
             {
-                routes.Add(new Route(
-                    "JSON" + i, new MyRouteHandler()));
+                Route route;
+                if (i == Math.Floor(StartUp.NumberOfRoutes/(allowedMethods.Length*2)))
+                {
+                    route = new Route("request-routing/hello/{id}/world", new MyRouteHandler())
+                    {
+                        Constraints = new RouteValueDictionary {{"httpMethod", methodConstraints}},
+                        Defaults = new RouteValueDictionary {{"id", 1}}
+                    };
+                }
+                else
+                {
+                    route = new Route("request-routing/" + Guid.NewGuid() + "/{id}/" + Guid.NewGuid(), 
+                        new MyRouteHandler())
+                    {
+                        Constraints = new RouteValueDictionary { { "httpMethod", methodConstraints } },
+                        Defaults = new RouteValueDictionary { { "id", 1 } }
+                    };
+                }
+                
+                routes.Add(route);
             }
 
             routes.MapRoute(

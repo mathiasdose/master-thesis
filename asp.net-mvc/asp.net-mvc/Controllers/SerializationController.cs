@@ -1,16 +1,19 @@
-﻿using System.Web.Http;
+﻿using System.Collections.Generic;
+using System.Web.Http;
 using asp.net_mvc.App_Start;
+using asp.net_mvc.models;
+using Newtonsoft.Json;
 
 namespace asp.net_mvc.Controllers
 {
     public class SerializationController : ApiController
     {
-        public IHttpActionResult GetSerialization(int size)
+        public IHttpActionResult GetSerialization(int id)
         {
-            var serialized = Json(StartUp.JSONData[size]);
-            var deSerialized = serialized.ToString();
+            var deSerialized = JsonConvert.DeserializeObject<List<SerialObject>>(StartUp.JSONData[id]);
+            var serialized = JsonConvert.SerializeObject(deSerialized);
             
-            return Ok(serialized);
+            return Ok();
         }
     }
 }

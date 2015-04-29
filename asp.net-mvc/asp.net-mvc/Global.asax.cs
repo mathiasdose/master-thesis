@@ -18,9 +18,12 @@ namespace asp.net_mvc
             // Code that runs on application startup
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
+
+            StartUp.Init();
+            
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             
-            StartUp.Init();
+
         }
     }
 }
