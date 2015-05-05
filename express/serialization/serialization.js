@@ -23,7 +23,7 @@ if (cluster.isMaster) {
 } else {
   var app = module.exports = express();
   var server = http.createServer(app);
-
+  
   var variables = ['10', '50', '100', '500', '1000', '5000', '10000'];
   var jsonInMemory = {};
 
@@ -35,8 +35,8 @@ if (cluster.isMaster) {
 
   app.get('/serialization/:size', function (req, res) {
     var size = req.params.size;
-    var serialized = JSON.parse(jsonInMemory[size]);
-    var deSerialized = JSON.stringify(serialized);
+    var deSerialized = JSON.parse(jsonInMemory[size]);
+    var serialized = JSON.stringify(deSerialized);
     res.send();
   });
 
