@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Hosting;
+using StackExchange.Redis;
 
 namespace asp.net_mvc.App_Start
 {
@@ -25,6 +26,25 @@ namespace asp.net_mvc.App_Start
             if (bool.Parse(ConfigurationManager.AppSettings["SerialTest"]))
                 SetupJSONTest();
 
+            if (bool.Parse(ConfigurationManager.AppSettings["CacheTest"]))
+                SetupCacheTest();
+
+        }
+
+        private static void SetupCacheTest()
+        {
+
+            using (var redis = ConnectionMultiplexer.Connect("localhost"))
+            {
+                IDatabase cacheDatabase = redis.GetDatabase();
+                
+                for (int i = 0; i < 100; i++)
+                {
+                    HashEntry[] hash = { new HashEntry("field1", "Hello"), new HashEntry("field2", "World" + i) };
+                    cacheDatabase.HashSet("Hash:" + i, hash);
+                }
+                
+            }
         }
 
         private static void SetupJSONTest()

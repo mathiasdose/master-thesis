@@ -14,8 +14,12 @@ namespace asp.net_mvc.Controllers
 
             using (var db = new MyDbContainer())
             {
-                var entity = db.world.Find(StartUp.Indexes.GetValue(randomId));
-                entity.randomNumber = random.Next(0, 10000);
+                var entity = new world()
+                {
+                    id = int.Parse(StartUp.Indexes.GetValue(randomId).ToString()),
+                    randomNumber = random.Next(0, 10000)
+                }; 
+
                 db.Entry(entity).State = System.Data.Entity.EntityState.Modified;
                 
                 db.SaveChanges();

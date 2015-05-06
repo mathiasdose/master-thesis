@@ -11,9 +11,10 @@ namespace asp.net_mvc.Controllers
     {
         public IHttpActionResult GetMyData()
         {
+            var entities = new List<world>();
             using (var db = new MyDbContainer())
             {
-                var entities = db.world;
+                entities = db.world.ToList();
             }
             return Ok();
         }
