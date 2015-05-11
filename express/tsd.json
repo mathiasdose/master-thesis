@@ -16,6 +16,9 @@
     },
     "jsonwebtoken/jsonwebtoken.d.ts": {
       "commit": "f3244190e20af6901e865f4cc58127d19216baa1"
+    },
+    "websocket/websocket.d.ts": {
+      "commit": "52fdabbd26f56349b138bfb36807f20c91a1d011"
     }
   }
 }

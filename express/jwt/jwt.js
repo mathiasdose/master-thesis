@@ -11,10 +11,13 @@ var cluster = require('cluster');
 var numCPUs = require('os').cpus().length;
 
 var PAYLOAD = 'John Doe';
-var SECRET = 'SECRET';
-var privateKey = fs.readFileSync(__dirname + '/private.pem').toString();
-var publicKey = fs.readFileSync(__dirname + '/public.pem').toString();
 
+var privateRSAKey = fs.readFileSync(__dirname + '/private.pem').toString();
+var publicRSAKey = fs.readFileSync(__dirname + '/public.pem').toString();
+var privateECKey = fs.readFileSync(__dirname + '/privateec.pem').toString();
+var publicECKey = fs.readFileSync(__dirname + '/cert.pem').toString();
+var secretKey = '0rtfaE3N58pPkQ7UURL6H4D4Ostht0N1';
+    
 if (cluster.isMaster) {
 
   for (var i = 0; i < numCPUs; i++) {
@@ -30,30 +33,30 @@ if (cluster.isMaster) {
   var server = http.createServer(app);
   
   app.get('/jwt/hs256', function (req, res) {
-    var token = jwt.sign(PAYLOAD, SECRET, { algorithm: 'HS256'});
-    jwt.verify(token, SECRET, { algorithms: ['HS256'] }, function (err, decoded) {
-      res.send();  
+    var token = jwt.sign(PAYLOAD, secretKey, { algorithm: 'HS256'});
+    jwt.verify(token, secretKey, { algorithms: ['HS256'] }, function (err, decoded) {
+      res.send(decoded);  
     });
   });
   
   app.get('/jwt/rs256', function (req, res) {
-    var token = jwt.sign(PAYLOAD, privateKey, { algorithm: 'RS256' });
-    jwt.verify(token, publicKey, { algorithms: ['RS256'] }, function (err, decoded) {
-      res.send();
+    var token = jwt.sign(PAYLOAD, privateRSAKey, { algorithm: 'RS256' });
+    jwt.verify(token, publicRSAKey, { algorithms: ['RS256'] }, function (err, decoded) {
+      res.send(decoded);
     });    
   });
   
   app.get('/jwt/es256', function (req, res) {
-    var token = jwt.sign(PAYLOAD, privateKey, { algorithm: 'ES256' });
-    jwt.verify(token, publicKey, { algorithms: ['ES256'] }, function (err, decoded) {
-      res.send();
+    var token = jwt.sign(PAYLOAD, privateECKey, { algorithm: 'ES256' });
+    jwt.verify(token, publicECKey, { algorithms: ['ES256'] }, function (err, decoded) {
+      res.send(decoded);
     });
   });
   
   app.get('/jwt/none', function (req, res) {
     var token = jwt.sign(PAYLOAD, null, { algorithm: 'none' });
     jwt.verify(token, null, { algorithms: ['none'] }, function (err, decoded) {
-      res.send();
+      res.send(decoded);
     });
   });
   
