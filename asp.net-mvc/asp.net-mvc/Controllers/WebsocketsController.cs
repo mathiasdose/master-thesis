@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.WebSockets;
+//using System.Web.WebSockets;
 
 namespace asp.net_mvc.Controllers
 {
@@ -25,19 +25,15 @@ namespace asp.net_mvc.Controllers
             return ResponseMessage(new HttpResponseMessage(HttpStatusCode.BadRequest));
         }
 
-        private async Task ProcessWebsocketSession(AspNetWebSocketContext context)
+        private async Task ProcessWebsocketSession(WebSocketContext context)
         {
             var ws = context.WebSocket;
             
-            //new Task(async () =>
-            //{
-            //var inputSegment = new ArraySegment<byte>(new byte[1024]);
             const int maxMessageSize = 1024;
             byte[] receiveBuffer = new byte[maxMessageSize];
 
             while (ws.State == WebSocketState.Open)
             {
-                // MUST read if we want the state to get updated...
                 var result = await ws.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
                 
                 if (result.MessageType == WebSocketMessageType.Close)
@@ -71,24 +67,23 @@ namespace asp.net_mvc.Controllers
                     ArraySegment<byte> outputBuffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(echoString));
 
                     await ws.SendAsync(outputBuffer, WebSocketMessageType.Text, true, CancellationToken.None);
-                }
+                    }
+                /*ArraySegment<byte> outputBuffer = new ArraySegment<byte>(receiveBuffer);
+                
+                
+                await ws.SendAsync(outputBuffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                    
+                var result = await ws.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
+                /*int i = 0;
+                while (i < 10)
+                {
+                    i++;
+                    var status = result.CloseStatusDescription;
+
+                    
+                }*/
+                
             }
-            //}).Start();
-/*
-            while (true)
-            {
-                if (ws.State != WebSocketState.Open)
-                {
-                    break;
-                }
-                else
-                {
-                    byte[] binaryData = {0xde, 0xad, 0xbe, 0xef, 0xca, 0xfe};
-                    var segment = new ArraySegment<byte>(binaryData);
-                    await ws.SendAsync(segment, WebSocketMessageType.Binary,
-                        true, CancellationToken.None);
-                }
-            }*/
         }
     }
 }
