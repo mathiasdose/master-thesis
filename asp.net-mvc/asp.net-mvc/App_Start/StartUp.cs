@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Hosting;
+using asp.net_mvc.Models;
+using Newtonsoft.Json;
 using StackExchange.Redis;
 
 namespace asp.net_mvc.App_Start
@@ -13,7 +17,14 @@ namespace asp.net_mvc.App_Start
     {
         public static Array Indexes { get; set; }
         public static Decimal NumberOfRoutes { get; set; }
-        public static Dictionary<int, string> JSONData { get; set; } 
+        public static Dictionary<int, string> JSONData { get; set; }
+        public static List<TemplateEngine> TemplateData { get; set; }
+        public static string SecretKey { get; set; }
+        public static byte[] PrivateRSAKey { get; set; }
+        public static byte[] PublicRSAKey { get; set; }
+        public static byte[] PrivateECKey { get; set; }
+        public static byte[] PublicECKey { get; set; }
+        public static RSACryptoServiceProvider publicAndPrivate { get; set; }
 
         public static void Init()
         {
@@ -29,6 +40,61 @@ namespace asp.net_mvc.App_Start
             if (bool.Parse(ConfigurationManager.AppSettings["CacheTest"]))
                 SetupCacheTest();
 
+            if (bool.Parse(ConfigurationManager.AppSettings["TemplateTest"]))
+                SetupTemplate();
+
+            if (bool.Parse(ConfigurationManager.AppSettings["JWTTest"]))
+                SetupJWTTest();
+            
+            
+
+        }
+
+        private static void SetupJWTTest()
+        {
+            SecretKey = "0rtfaE3N58pPkQ7UURL6H4D4Ostht0N1";
+
+            using (var fs = new StreamReader(HostingEnvironment.ApplicationPhysicalPath + @".\data\private.pem"))
+            {
+                string text = fs.ReadToEnd();
+                PrivateRSAKey = GetBytes(text);
+            }
+            using (var fs = new StreamReader(HostingEnvironment.ApplicationPhysicalPath + @".\data\public.pem"))
+            {
+                string text = fs.ReadToEnd();
+                PublicRSAKey = GetBytes(text);
+            }
+            using (var fs = new StreamReader(HostingEnvironment.ApplicationPhysicalPath + @".\data\privateec.pem"))
+            {
+                string text = fs.ReadToEnd();
+                PrivateECKey = GetBytes(text);
+            }
+            using (var fs = new StreamReader(HostingEnvironment.ApplicationPhysicalPath + @".\data\cert.pem"))
+            {
+                string text = fs.ReadToEnd();
+                PublicECKey = GetBytes(text);
+            }
+
+            publicAndPrivate = new RSACryptoServiceProvider();
+            RsaKeyGenerationResult keyGenerationResult = JWT.GenerateRsaKeys();
+
+            publicAndPrivate.FromXmlString(keyGenerationResult.PublicAndPrivateKey);
+        }
+
+        private static void SetupTemplate()
+        {
+            using (var fs = new StreamReader(HostingEnvironment.ApplicationPhysicalPath + @".\data\filtered.json"))
+            {
+                string text = fs.ReadToEnd();
+                TemplateData = JsonConvert.DeserializeObject<List<TemplateEngine>>(text);
+            }
+        }
+
+        private static byte[] GetBytes(string text)
+        {
+            var bytes = new byte[text.Length * sizeof(char)];
+            Buffer.BlockCopy(text.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;   
         }
 
         private static void SetupCacheTest()

@@ -1,0 +1,16 @@
+﻿@model IList<asp.net_mvc.Models.TemplateEngine>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+</head>
+<body>
+    @foreach (var item in Model)
+    {
+        <p>
+            @Html.Raw(@Html.Partial("_PartialTemplate", item))
+        </p>
+    }
+</body>
+</html>
