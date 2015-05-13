@@ -11,10 +11,11 @@ using Jose;
 using Security.Cryptography;
 using JWT = asp.net_mvc.Models.JWT;
 
-namespace asp.net_mvc.Controllers
+/*namespace asp.net_mvc.Controllers
 {
     public class DeprJWT : ApiController
     {
+        
         public IHttpActionResult GetJWT(string type)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -155,12 +156,12 @@ namespace asp.net_mvc.Controllers
             string tokenString = tokenHandler.WriteToken(jwtToken);
 
             Console.WriteLine("Token string: {0}", tokenString);*/
-
+        /*
             return Ok(new {userData});
         }
     }
 }
-
+/*
 public class Authorization 
     { 
         public static byte[] GetBytes(string input) 
@@ -172,3 +173,4 @@ public class Authorization
     }
 
     
+*/

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using System.Security.Cryptography;
-using asp.net_mvc.Models;
 using Jose;
 using Security.Cryptography;
-using JWT = asp.net_mvc.Models.JWT;
 
 namespace asp.net_mvc.Controllers
 {
@@ -21,12 +18,10 @@ namespace asp.net_mvc.Controllers
             switch (type)
             {
                 case "HS256":
-                    byte [] securityKey = Authorization.GetBytes("0rtfaE3N58pPkQ7UURL6H4D4Ostht0N1");
                     
-                    string hstoken = Jose.JWT.Encode(payload, securityKey, JwsAlgorithm.HS256);
-                    string hsjson = Jose.JWT.Decode(hstoken, securityKey);
+                    string hstoken = Jose.JWT.Encode(payload, App_Start.StartUp.SecretByteKey, JwsAlgorithm.HS256);
+                    string hsjson = Jose.JWT.Decode(hstoken, App_Start.StartUp.SecretByteKey);
                     return Ok(hsjson);
-                    break;
 
                 case "RS256":
                     
@@ -34,7 +29,6 @@ namespace asp.net_mvc.Controllers
                     string rstoken = Jose.JWT.Encode(payload, App_Start.StartUp.publicAndPrivate, JwsAlgorithm.RS256);
                     string rsjson = Jose.JWT.Decode(rstoken, App_Start.StartUp.publicAndPrivate);
                     return Ok(rsjson);
-                    break;
 
                 case "ES256":
 
@@ -55,7 +49,6 @@ namespace asp.net_mvc.Controllers
                     string nantoken = Jose.JWT.Encode(payload, null, JwsAlgorithm.none);
                     string nanjson = Jose.JWT.Decode(nantoken, null);
                     return Ok(nanjson);
-                    break;
 
                 default:
                     return Ok();

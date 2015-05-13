@@ -20,7 +20,7 @@ namespace asp.net_mvc.Controllers
                     value.Add(cacheDatabase.HashGet(cacheDatabase.KeyRandom(), "field2"));
                 }
             }
-            return Ok(new {value});
+            return Ok();
         }
     }
 }

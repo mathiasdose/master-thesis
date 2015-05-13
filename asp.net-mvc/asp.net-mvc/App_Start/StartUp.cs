@@ -20,6 +20,7 @@ namespace asp.net_mvc.App_Start
         public static Dictionary<int, string> JSONData { get; set; }
         public static List<TemplateEngine> TemplateData { get; set; }
         public static string SecretKey { get; set; }
+        public static byte[] SecretByteKey { get; set; }
         public static byte[] PrivateRSAKey { get; set; }
         public static byte[] PublicRSAKey { get; set; }
         public static byte[] PrivateECKey { get; set; }
@@ -53,7 +54,7 @@ namespace asp.net_mvc.App_Start
         private static void SetupJWTTest()
         {
             SecretKey = "0rtfaE3N58pPkQ7UURL6H4D4Ostht0N1";
-
+            SecretByteKey = GetBytes(SecretKey);
             using (var fs = new StreamReader(HostingEnvironment.ApplicationPhysicalPath + @".\data\private.pem"))
             {
                 string text = fs.ReadToEnd();
