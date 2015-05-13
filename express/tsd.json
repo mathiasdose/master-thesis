@@ -19,6 +19,18 @@
     },
     "websocket/websocket.d.ts": {
       "commit": "52fdabbd26f56349b138bfb36807f20c91a1d011"
+    },
+    "sequelize/sequelize.d.ts": {
+      "commit": "52fdabbd26f56349b138bfb36807f20c91a1d011"
+    },
+    "chance/chance.d.ts": {
+      "commit": "52fdabbd26f56349b138bfb36807f20c91a1d011"
+    },
+    "redis/redis.d.ts": {
+      "commit": "d1984014e1ed8ce72b940168a31185294cd49c0e"
+    },
+    "bluebird/bluebird.d.ts": {
+      "commit": "846a250e0a6f5e6adf6347ee4ca442a9d1abd8fc"
     }
   }
 }
