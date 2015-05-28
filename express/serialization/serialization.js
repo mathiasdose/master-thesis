@@ -24,7 +24,7 @@ if (cluster.isMaster) {
   var app = module.exports = express();
   var server = http.createServer(app);
   
-  var variables = ['10', '50', '100', '500', '1000', '5000', '10000'];
+  var variables = ['10', '100', '1000', '10000'];
   var jsonInMemory = {};
 
 
@@ -42,7 +42,7 @@ if (cluster.isMaster) {
 
 
 
-  server.listen(9000, function () {
+  server.listen(9000, '0.0.0.0', function () {
     console.log('Express server listening on %d', 9000);
   });
 

@@ -10,10 +10,11 @@ namespace asp.net_mvc.Controllers
         public IHttpActionResult GetMyData()
         {
             var randomId = new Random().Next(0, StartUp.Indexes.Length);
+            world entity;
 
             using (var db = new MyDbContainer())
             {    
-                var entity = db.world.Find(StartUp.Indexes.GetValue(randomId));
+                entity = db.world.Find(StartUp.Indexes.GetValue(randomId));
             }
 
             return Ok();

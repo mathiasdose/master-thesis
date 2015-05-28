@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Net.WebSockets;
@@ -29,7 +30,7 @@ namespace asp.net_mvc.Controllers
         {
             var ws = context.WebSocket;
             
-            const int maxMessageSize = 1024;
+            int maxMessageSize = Convert.ToInt32(ConfigurationManager.AppSettings["WSmsg"]);
             byte[] receiveBuffer = new byte[maxMessageSize];
 
             while (ws.State == WebSocketState.Open)
@@ -68,12 +69,12 @@ namespace asp.net_mvc.Controllers
 
                     await ws.SendAsync(outputBuffer, WebSocketMessageType.Text, true, CancellationToken.None);
                     }
-                /*ArraySegment<byte> outputBuffer = new ArraySegment<byte>(receiveBuffer);
+                //ArraySegment<byte> outputBuffer = new ArraySegment<byte>(receiveBuffer);
                 
                 
-                await ws.SendAsync(outputBuffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                //await ws.SendAsync(outputBuffer, WebSocketMessageType.Text, true, CancellationToken.None);
                     
-                var result = await ws.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
+                //var result = await ws.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
                 /*int i = 0;
                 while (i < 10)
                 {

@@ -15,6 +15,9 @@ namespace asp.net_mvc
     public partial class world
     {
         public int id { get; set; }
-        public int randomNumber { get; set; }
+        public int randomInteger { get; set; }
+        public string randomString { get; set; }
+        public decimal randomDecimal { get; set; }
+        public System.DateTime randomDate { get; set; }
     }
 }

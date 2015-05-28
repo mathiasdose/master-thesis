@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using asp.net_mvc.App_Start;
 using Jose;
 using Security.Cryptography;
 
@@ -19,44 +20,38 @@ namespace asp.net_mvc.Controllers
             {
                 case "HS256":
                     
-                    string hstoken = Jose.JWT.Encode(payload, App_Start.StartUp.SecretByteKey, JwsAlgorithm.HS256);
-                    string hsjson = Jose.JWT.Decode(hstoken, App_Start.StartUp.SecretByteKey);
-                    return Ok(hsjson);
+                    string hstoken = JWT.Encode(payload, StartUp.SecretByteKey, JwsAlgorithm.HS256);
+                    string hsjson = JWT.Decode(hstoken, StartUp.SecretByteKey);
+                    return Ok();
 
                 case "RS256":
                     
 
-                    string rstoken = Jose.JWT.Encode(payload, App_Start.StartUp.publicAndPrivate, JwsAlgorithm.RS256);
-                    string rsjson = Jose.JWT.Decode(rstoken, App_Start.StartUp.publicAndPrivate);
-                    return Ok(rsjson);
+                    string rstoken = JWT.Encode(payload, StartUp.publicAndPrivate, JwsAlgorithm.RS256);
+                    string rsjson = JWT.Decode(rstoken, StartUp.publicAndPrivate);
+                    return Ok();
 
                 case "ES256":
 
-                    byte[] x = Authorization.GetBytes("BggqhkjOPQMBBw==");
-                    byte[] y =
-                        Authorization.GetBytes(
-                            "MHcCAQEEIIe9/onbNPKUMM9gvBKE/nzAYIKV831MNFwQc/QUrjQcoAoGCCqGSM49AwEHoUQDQgAEqiLqYVFWTH/L5ejmjQyOJSvl1I2bFdCxWz8BXHAjp0afjMGPalOKoCvDD13FBb34O6InAAHzA4uZ3X2JjvXDag==");
-                    byte[] d = Authorization.GetBytes("MHcCAQEEIIe9/onbNPKUMM9gvBKE/nzAYIKV831MNFwQc/QUrjQcoAoGCCqGSM49AwEHoUQDQgAEqiLqYVFWTH/L5ejmjQyOJSvl1I2bFdCxWz8BXHAjp0afjMGPalOKoCvDD13FBb34O6InAAHzA4uZ3X2JjvXDag==");
+                    var privateKey = EccKey.New(StartUp.EccX, StartUp.EccY, StartUp.EccD);
 
-                    var privateKey = EccKey.New(x, y, d);
-
-                    string estoken = Jose.JWT.Encode(payload, privateKey, JwsAlgorithm.ES256);
-                    string esjson = Jose.JWT.Decode(estoken, privateKey);
-                    return Ok(esjson);
+                    string estoken = JWT.Encode(payload, privateKey, JwsAlgorithm.ES256);
+                    string esjson = JWT.Decode(estoken, privateKey);
+                    return Ok();
 
                 case "none":
                     
-                    string nantoken = Jose.JWT.Encode(payload, null, JwsAlgorithm.none);
-                    string nanjson = Jose.JWT.Decode(nantoken, null);
-                    return Ok(nanjson);
+                    string nantoken = JWT.Encode(payload, null, JwsAlgorithm.none);
+                    string nanjson = JWT.Decode(nantoken, null);
+                    return Ok();
 
                 default:
-                    return Ok();
+                    return InternalServerError();
             }
 
         }
     }
-    public class Authorization 
+    /*public class Authorization 
     { 
         public static byte[] GetBytes(string input) 
         { 
@@ -64,5 +59,5 @@ namespace asp.net_mvc.Controllers
             Buffer.BlockCopy(input.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;   
         } 
-    }
+    }*/
 }

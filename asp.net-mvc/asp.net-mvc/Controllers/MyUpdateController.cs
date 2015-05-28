@@ -17,7 +17,10 @@ namespace asp.net_mvc.Controllers
                 var entity = new world()
                 {
                     id = int.Parse(StartUp.Indexes.GetValue(randomId).ToString()),
-                    randomNumber = random.Next(0, 10000)
+                    randomInteger = StartUp.WorldObject.randomInteger,
+                    randomString = StartUp.WorldObject.randomString,
+                    randomDecimal = StartUp.WorldObject.randomDecimal,
+                    randomDate = StartUp.WorldObject.randomDate
                 }; 
 
                 db.Entry(entity).State = System.Data.Entity.EntityState.Modified;

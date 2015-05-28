@@ -20,7 +20,7 @@ if (cluster.isMaster) {
   var server = http.createServer(app);
 
 
-  server.listen(9000, function () {
+  server.listen(9000, '0.0.0.0', function () {
     console.log((new Date()) + ' Server is listening on port 9000');
   });
 

@@ -41,7 +41,7 @@ if (cluster.isMaster) {
 		});
 	});
 
-	server.listen(9000, function () {
+	server.listen(9000, '0.0.0.0', function () {
 		console.log('Express server listening on %d', 9000);
 	});
 

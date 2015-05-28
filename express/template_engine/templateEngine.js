@@ -28,11 +28,8 @@ if (cluster.isMaster) {
 
   var variables = {
     '10': users.slice(0, 10),
-    '50': users.slice(0, 50),
     '100': users,
-    '500': times(users, 5),
     '1000': times(users, 10),
-    '5000': times(users, 50),
     '10000': times(users, 100)
   };
   var data = {};
@@ -46,7 +43,7 @@ if (cluster.isMaster) {
   });
 
 
-  server.listen(9000, function () {
+  server.listen(9000, '0.0.0.0', function () {
     console.log('Express server listening on %d', 9000);
   });
 

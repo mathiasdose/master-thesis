@@ -17,8 +17,10 @@ namespace asp.net_mvc.App_Start
     {
         public static Array Indexes { get; set; }
         public static Decimal NumberOfRoutes { get; set; }
+        public static world WorldObject { get; set; }
         public static Dictionary<int, string> JSONData { get; set; }
         public static List<TemplateEngine> TemplateData { get; set; }
+        public static Dictionary<int, List<TemplateEngine>> TemplateDData { get; set; }
         public static string SecretKey { get; set; }
         public static byte[] SecretByteKey { get; set; }
         public static byte[] PrivateRSAKey { get; set; }
@@ -26,6 +28,10 @@ namespace asp.net_mvc.App_Start
         public static byte[] PrivateECKey { get; set; }
         public static byte[] PublicECKey { get; set; }
         public static RSACryptoServiceProvider publicAndPrivate { get; set; }
+        public static byte[] EccX { get; set; }
+        public static byte[] EccY { get; set; }
+        public static byte[] EccD { get; set; }
+        public static Array CacheKeys { get; set; }
 
         public static void Init()
         {
@@ -80,6 +86,10 @@ namespace asp.net_mvc.App_Start
             RsaKeyGenerationResult keyGenerationResult = JWT.GenerateRsaKeys();
 
             publicAndPrivate.FromXmlString(keyGenerationResult.PublicAndPrivateKey);
+
+            EccX = new byte[]{ 4, 114, 29, 223, 58, 3, 191, 170, 67, 128, 229, 33, 242, 178, 157, 150, 133, 25, 209, 139, 166, 69, 55, 26, 84, 48, 169, 165, 67, 232, 98, 9 };
+            EccY = new byte[]{ 131, 116, 8, 14, 22, 150, 18, 75, 24, 181, 159, 78, 90, 51, 71, 159, 214, 186, 250, 47, 207, 246, 142, 127, 54, 183, 72, 72, 253, 21, 88, 53 };
+            EccD = new byte[] { 42, 148, 231, 48, 225, 196, 166, 201, 23, 190, 229, 199, 20, 39, 226, 70, 209, 148, 29, 70, 125, 14, 174, 66, 9, 198, 80, 251, 95, 107, 98, 206 };
         }
 
         private static void SetupTemplate()
@@ -89,6 +99,24 @@ namespace asp.net_mvc.App_Start
                 string text = fs.ReadToEnd();
                 TemplateData = JsonConvert.DeserializeObject<List<TemplateEngine>>(text);
             }
+            TemplateDData = new Dictionary<int, List<TemplateEngine>>();
+            
+            TemplateDData.Add(10, TemplateData.GetRange(0, 10).ToList());
+            TemplateDData.Add(100, TemplateData);
+            
+            TemplateDData.Add(1000, Times(TemplateData, 10));
+            TemplateDData.Add(10000, Times(TemplateData, 100));
+
+        }
+
+        private static List<TemplateEngine> Times(List<TemplateEngine> list, int n)
+        {
+            var copy = new List<TemplateEngine>();
+            for (int i = 0; i < n; i++)
+            {
+                copy.AddRange(list);
+            }
+            return copy;
         }
 
         private static byte[] GetBytes(string text)
@@ -104,20 +132,22 @@ namespace asp.net_mvc.App_Start
             using (var redis = ConnectionMultiplexer.Connect("localhost"))
             {
                 IDatabase cacheDatabase = redis.GetDatabase();
-                
+                var keys = new List<string>();
                 for (int i = 0; i < 100; i++)
                 {
                     HashEntry[] hash = { new HashEntry("field1", "Hello"), new HashEntry("field2", "World" + i) };
-                    cacheDatabase.HashSet("Hash:" + i, hash);
+                    var key = "Hash:" + i;
+                    cacheDatabase.HashSet(key, hash);
+                    keys.Add(key);
                 }
-                
+                CacheKeys = keys.ToArray();
             }
         }
 
         private static void SetupJSONTest()
         {
             
-            var paths = Directory.GetFiles(HostingEnvironment.ApplicationPhysicalPath + @".\data\", "*.json" );
+            var paths = Directory.GetFiles(HostingEnvironment.ApplicationPhysicalPath + @".\data\", "*0.json" );
 
             JSONData = new Dictionary<int, string>();
             foreach (var path in paths)
@@ -149,13 +179,26 @@ namespace asp.net_mvc.App_Start
 
         private static IEnumerable<world> WorldData()
         {
-            var random = new Random();
             var worlds = new List<world>();
+            WorldObject = new world()
+            {
+                randomInteger = 10,
+                randomString = "Hello world",
+                randomDecimal = new Decimal(0.5),
+                randomDate = new DateTime()
+            };
             for (var i = 0; i < 100; i++)
             {
-                worlds.Add(new world() {randomNumber = random.Next(0, 10000)});
+                worlds.Add(new world()
+                {
+                    randomInteger = 10,
+                    randomString = "Hello world",
+                    randomDecimal = new Decimal(0.5),
+                    randomDate = new DateTime()
+                });
             }
 
+            
             return worlds;
         }
     }

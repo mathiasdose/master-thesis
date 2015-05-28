@@ -12,8 +12,8 @@ var numCPUs = require('os').cpus().length;
 
 var chance = new Chance();
 
-var sequelize = new Sequelize('test', 'mathiasdose', null, {
-		host: 'localhost',
+var sequelize = new Sequelize('test', 'mathias', 'asdasd', {
+		host: '192.168.0.2',
 		port: 3306,
 		dialect: 'mysql',
 		logging: false,
@@ -102,7 +102,7 @@ if (cluster.isMaster) {
 		});
 	});
 
-	server.listen(9000, function () {
+	server.listen(9000, '0.0.0.0', function () {
 		console.log('Express server listening on %d', 9000);
 	});
 }

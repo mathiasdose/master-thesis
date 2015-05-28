@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Web.Http;
+using asp.net_mvc.App_Start;
 
 namespace asp.net_mvc.Controllers
 {
@@ -8,13 +9,10 @@ namespace asp.net_mvc.Controllers
     {
         public IHttpActionResult GetMyData()
         {
-            var world = new world()
-                {
-                    randomNumber = new Random().Next(0, 10000)
-                };
+            
             using (var db = new MyDbContainer())
             {
-                db.world.Add(world);
+                db.world.Add(StartUp.WorldObject);
                 db.SaveChanges();
             }
 

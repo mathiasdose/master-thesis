@@ -5,9 +5,9 @@ namespace asp.net_mvc.Controllers
 {
     public class TemplateController : Controller
     {
-        public ActionResult Index()
+        public ActionResult Index(int id)
         {
-            return View(StartUp.TemplateData);
+            return View(StartUp.TemplateDData[id]);
         }
     }
 }

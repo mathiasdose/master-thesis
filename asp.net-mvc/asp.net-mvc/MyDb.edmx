@@ -10,7 +10,10 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="randomNumber" Type="int" Nullable="false" />
+          <Property Name="randomInteger" Type="int" Nullable="false" />
+          <Property Name="randomString" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="randomDecimal" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+          <Property Name="randomDate" Type="datetime" Precision="0" Nullable="false" />
         </EntityType>
         <EntityContainer Name="MyDbStoreContainer">
           <EntitySet Name="world" EntityType="Self.world" Schema="test" store:Type="Tables" />
@@ -27,7 +30,10 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="randomNumber" Type="Int32" Nullable="false" />
+          <Property Name="randomInteger" Type="Int32" Nullable="false" />
+          <Property Name="randomString" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="randomDecimal" Type="Decimal" Nullable="false" />
+          <Property Name="randomDate" Type="DateTime" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -40,7 +46,10 @@
           <EntitySetMapping Name="world">
             <EntityTypeMapping TypeName="MyDb.world">
               <MappingFragment StoreEntitySet="world">
-                <ScalarProperty Name="randomNumber" ColumnName="randomNumber" />
+                <ScalarProperty Name="randomDate" ColumnName="randomDate" />
+                <ScalarProperty Name="randomDecimal" ColumnName="randomDecimal" />
+                <ScalarProperty Name="randomString" ColumnName="randomString" />
+                <ScalarProperty Name="randomInteger" ColumnName="randomInteger" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
